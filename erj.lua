@@ -22,8 +22,8 @@ local positions = {
     Vector3.new(57, 3, -49032)
 }
 
-local duration = 0.6
-local bondPauseDuration = 0.6
+local duration = 0.8
+local bondPauseDuration = 0.8
 
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
