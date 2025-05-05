@@ -61,11 +61,19 @@ local function safeTeleport(position)
     end)
 end
 
+
 task.spawn(function()
     for _, pos in ipairs(positions) do
         safeTeleport(pos)
         task.wait(duration)
 
+        if pos == Vector3.new(57, 3, -49032) then
+            print("Reached final position, waiting 15 seconds...")
+            task.wait(15) -- Wait before executing loadstring
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ewewe514/lowserver.github.io/refs/heads/main/lowserver.lua"))()
+            print("Executed loadstring after 15 seconds.")
+        end
+                        
         local bonds = workspace.RuntimeItems:GetChildren()
 
         for _, bond in ipairs(bonds) do
