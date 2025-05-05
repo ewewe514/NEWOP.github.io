@@ -19,18 +19,16 @@ local positions = {
     Vector3.new(57, 3, -38000), Vector3.new(57, 3, -40000),
     Vector3.new(57, 3, -42000), Vector3.new(57, 3, -44000),
     Vector3.new(57, 3, -46000), Vector3.new(57, 3, -48000),
-    Vector3.new(57, 3, -49032) -- Final step
+    Vector3.new(57, 3, -49032)
 }
 
-local duration = 0.6  -- Time between normal teleports
-local bondPauseDuration = 0.6  -- Stay at bond location for 0.8 seconds
+local duration = 0.6
+local bondPauseDuration = 0.6
 
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local hrp = char:WaitForChild("HumanoidRootPart")
 
-
--- Create ScreenGui for bond counter
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:FindFirstChildOfClass("PlayerGui")
 
@@ -45,13 +43,12 @@ bondCounter.TextColor3 = Color3.fromRGB(255, 255, 255)
 bondCounter.Text = "Bonds Found: 0"
 bondCounter.Parent = screenGui
 
--- Close GUI after 1 second
 task.spawn(function()
     task.wait(1)
     screenGui:Destroy()
 end)
 
-local foundBonds = {}  -- Store bond positions uniquely
+local foundBonds = {}
 local bondCount = 0
 
 local function updateBondCount()
@@ -60,11 +57,10 @@ end
 
 local function safeTeleport(position)
     pcall(function()
-        hrp.CFrame = CFrame.new(position)
+        hrp.CFrame = CFrame.new(position) -- Changed Position to CFrame
     end)
 end
 
--- Improved teleport loop using spawning for smoother execution
 task.spawn(function()
     for _, pos in ipairs(positions) do
         safeTeleport(pos)
@@ -75,7 +71,6 @@ task.spawn(function()
         for _, bond in ipairs(bonds) do
             if bond:IsA("Model") and bond.PrimaryPart and (bond.Name == "Bond" or bond.Name == "Bonds") then
                 local bondPos = bond.PrimaryPart.Position
-                -- Prevent teleporting to the same bond twice
                 local alreadyVisited = false
 
                 for _, storedPos in ipairs(foundBonds) do
@@ -86,26 +81,25 @@ task.spawn(function()
                 end
 
                 if not alreadyVisited then
-                    table.insert(foundBonds, bondPos)  -- Mark this bond position as visited
+                    table.insert(foundBonds, bondPos)
                     bondCount = bondCount + 1
                     safeTeleport(bondPos)
                     print("Bond found! Teleporting to " .. tostring(bondPos))
                     task.wait(bondPauseDuration)
 
                     updateBondCount()
-                    safeTeleport(pos) -- Resume normal teleport path
+                    safeTeleport(pos)
                 end
             end
         end
     end
-end) -- Closing the task.spawn function
-
+end)
 
 task.spawn(function()
-    task.wait(2) -- Wait 15 seconds before starting bond collection
+    task.wait(2)
 
     while true do
-        task.wait(0.1) -- Check every 0.3 seconds
+        task.wait(0.1)
 
         local items = game.Workspace:WaitForChild("RuntimeItems")
 
